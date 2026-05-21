@@ -10,11 +10,14 @@
       rel="stylesheet"
     />
     <style>
-      /* OG card. Two zones with a soft transition: cream left for
-         the brand wordmark, lime panel right for the illustration.
-         The illustration sits inside its own contained "frame" so
-         the asset's internal background doesn't bleed onto the
-         cream half. */
+      /* OG card. Pure typography composition with a single brand
+         move: the wordmark is set with a dotless "ı" (U+0131) so
+         we can draw the i-tittle ourselves as a lime location pin.
+         Below the wordmark sits the app's signature ride-card
+         route motif — outline dot → dashed lime line → filled dot
+         — pulled in as the only secondary graphic so the OG
+         echoes the visual language the user sees in-app on every
+         ride card. */
       html, body {
         margin: 0;
         padding: 0;
@@ -32,76 +35,90 @@
         width: 1200px;
         height: 630px;
         display: flex;
+        flex-direction: column;
         align-items: center;
+        justify-content: center;
+        gap: 36px;
         background: #fffdf4;
       }
-      /* Left zone — wordmark + watermark. ~60% of the canvas so the
-         "UniPool" type has room to breathe at 168px without crowding
-         the illustration on the right. */
-      .left {
-        flex: 0 0 720px;
-        padding: 0 0 0 80px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
+      .wordmark-wrap {
+        position: relative;
+        line-height: 1;
       }
       .wordmark {
         font-weight: 800;
-        font-size: 188px;
-        letter-spacing: -0.055em;
+        font-size: 256px;
+        letter-spacing: -0.06em;
         line-height: 1;
         color: #263b33;
         margin: 0;
+        white-space: nowrap;
+      }
+      /* Hand-placed dot for the "ı". Sized + positioned to feel
+         like the natural tittle, just in lime — a subtle accent
+         that turns the wordmark into a single graphic. */
+      .i-dot {
+        position: absolute;
+        top: 22px;
+        left: 332px;
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        background: #b5d750;
+      }
+      /* Route motif. Outline dot + dashed line + filled dot,
+         same dimensions/proportions the app's RideCard uses for
+         "FROM → TO". Centered horizontally so it sits as a quiet
+         baseline under the wordmark. */
+      .route {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .route .dot-open {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        border: 3.5px solid #263b33;
+        background: transparent;
+      }
+      .route .dash {
+        width: 320px;
+        height: 3px;
+        background-image: linear-gradient(to right, #b5d750 50%, transparent 50%);
+        background-size: 12px 3px;
+        background-repeat: repeat-x;
+      }
+      .route .dot-filled {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: #263b33;
       }
       .watermark {
         position: absolute;
         bottom: 56px;
-        left: 80px;
+        left: 50%;
+        transform: translateX(-50%);
         font-weight: 700;
-        font-size: 20px;
-        letter-spacing: 0.04em;
+        font-size: 22px;
+        letter-spacing: 0.08em;
         color: #263b33;
-        opacity: 0.4;
-      }
-      /* Right zone — contained illustration panel. A rounded lime
-         tile holds the carpool illustration so the asset's internal
-         background never bleeds onto the cream canvas. The tile sits
-         off the right edge of the OG by a margin so it feels like a
-         framed object, not a slabbed background. */
-      .right {
-        flex: 1;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 60px 60px 60px 0;
-      }
-      .panel {
-        width: 100%;
-        height: 100%;
-        background: #dff0a1;
-        border-radius: 36px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-      }
-      .panel img {
-        width: 92%;
-        height: auto;
-        display: block;
+        opacity: 0.35;
+        text-transform: lowercase;
       }
     </style>
   </head>
   <body>
     <div class="card">
-      <div class="left">
-        <h1 class="wordmark">UniPool</h1>
+      <div class="wordmark-wrap">
+        <h1 class="wordmark">Unı&#8203;Pool</h1>
+        <span class="i-dot" aria-hidden="true"></span>
       </div>
-      <div class="right">
-        <div class="panel">
-          <img src="../public/unipool-main-logo.svg" alt="" />
-        </div>
+      <div class="route" aria-hidden="true">
+        <span class="dot-open"></span>
+        <span class="dash"></span>
+        <span class="dot-filled"></span>
       </div>
       <p class="watermark">unipool.acmvit.in</p>
     </div>
