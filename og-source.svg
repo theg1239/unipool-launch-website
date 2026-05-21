@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none">
+  <!-- Cream marketing canvas (matches the site body bg). -->
+  <rect width="1200" height="630" fill="#FFFDF4"/>
+
+  <!-- Soft lime halo bottom-right behind the illustration so the
+       canvas reads as two zones (cream brand left, lime panel
+       right) without a hard seam. -->
+  <ellipse cx="1100" cy="630" rx="700" ry="420" fill="#B5D750" opacity="0.22"/>
+
+  <!-- Wordmark — only thing on the left half. Forest, big, brand
+       pure. Vertically centred. Font size sized to comfortably
+       clear the illustration on the right and still read at
+       Twitter's downscaled card thumbnail. -->
+  <text x="80" y="358" font-family="'Nunito Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-weight="800" font-size="148" letter-spacing="-0.045em" fill="#263B33">UniPool</text>
+
+  <!-- Quiet host name at the bottom. Same forest hue at low
+       opacity so it reads as a watermark, not a CTA. -->
+  <text x="80" y="556" font-family="'Nunito Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-weight="700" font-size="22" letter-spacing="0.02em" fill="#263B33" opacity="0.5">unipool.acmvit.in</text>
+
+  <!-- Hero illustration anchored to the right side. The original
+       asset is 742×468; scaling by 0.78 + offsetting positions it
+       in the lime halo zone without overlapping the wordmark. -->
+  <g transform="translate(680,160)">
+    <image href="public/unipool-main-logo.svg" x="0" y="0" width="480" height="300"/>
+  </g>
+</svg>
