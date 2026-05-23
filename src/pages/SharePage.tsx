@@ -183,9 +183,6 @@ function BoardingPass({
     [startDisplay, endDisplay],
   );
 
-  // Last four hex chars of the UUID, uppercase. Same idea as a flight
-  // number — short, memorable, and matches the rideId without exposing
-  // the whole 36-character string.
   const rideCode = useMemo(() => {
     const hex = rideId.replace(/-/g, "").slice(0, 6).toUpperCase();
     return `UP-${hex}`;
@@ -207,25 +204,16 @@ function BoardingPass({
 
   const hostBadgeName = ride.host_first_name || "A UniPool host";
   const hostInitial = (ride.host_first_name?.[0] || "U").toUpperCase();
+  const passengerCapacity = Math.max(0, Math.floor(ride.total_seats || 0) - 1);
+  const seatsValue = `${ride.seats_available}/${passengerCapacity}`;
 
   return (
     <article
       aria-label="Ride invitation"
       className="relative w-full max-w-[880px] overflow-visible"
     >
-      {/* The card. Single cream surface. On desktop, horizontal:
-          main info on the left, QR/stub on the right with a
-          vertical dashed perforation BETWEEN them (positioned
-          absolutely so it doesn't fight for a grid cell). On
-          mobile the stub is hidden entirely (the recipient is on
-          a phone already — no need to scan a QR to get to their
-          own phone) and the main zone fills the card. */}
       <div className="relative grid grid-cols-1 overflow-hidden rounded-[24px] bg-cream shadow-[0_24px_60px_-28px_rgba(38,59,51,0.35)] md:grid-cols-[1fr_240px]">
-        {/* ----- PERFORATION (desktop only) -----
-            Absolute-positioned so it doesn't take a grid cell.
-            Sits on the seam between the 1fr main column and the
-            240px stub column. Two lime scoops notched out of the
-            top + bottom caps sell the torn-paper read. */}
+
         <div
           aria-hidden
           className="pointer-events-none absolute inset-y-0 right-[240px] hidden w-px md:block"
@@ -235,15 +223,8 @@ function BoardingPass({
           <div className="absolute inset-y-6 left-1/2 -translate-x-1/2 border-l border-dashed border-forest/25" />
         </div>
 
-        {/* ----- MAIN ZONE ----- */}
         <div className="relative px-6 pb-6 pt-5 sm:px-8 sm:pb-7 sm:pt-6 md:px-10 md:pt-8 md:pb-9">
-          {/* Brand row — UniPool wordmark + boarding-pass label
-              in a single tight row at the top of the card. The
-              wordmark uses the same `font-extrabold tracking-tight
-              text-forest` recipe as the site nav so the brand
-              language reads identically wherever the user has
-              seen it before — no extra logo glyph, just the
-              text. */}
+
           <div className="flex items-center justify-between">
             <span className="text-base font-extrabold tracking-tight text-forest">
               UniPool
@@ -272,10 +253,6 @@ function BoardingPass({
             </p>
           </div>
 
-          {/* Destination headline — page hero, all-caps Nunito Sans
-              900. Trimmed from 64 → 44/48 so the whole card fits
-              one viewport without scrolling on either phone or
-              13" laptop. */}
           <h1 className="mt-4 text-3xl font-black uppercase leading-[0.92] tracking-[-0.025em] text-forest sm:text-4xl md:text-[44px]">
             {shortenDestination(endDisplay)}
           </h1>
@@ -284,8 +261,6 @@ function BoardingPass({
             <span className="text-forest">{shortenDestination(startDisplay)}</span>
           </p>
 
-          {/* Hairline + stats row + route — same content as before,
-              tighter spacing throughout. */}
           <div className="mt-5 h-px w-full bg-forest/10" />
 
           <div className="mt-4 grid grid-cols-3 gap-4 sm:gap-6">
@@ -293,11 +268,11 @@ function BoardingPass({
             <Field
               label="Per seat"
               value={`₹${ride.price_per_seat}`}
-              sub={`₹${ride.total_price} total`}
+              sub="per rider"
             />
             <Field
               label="Seats"
-              value={`${ride.seats_available}/${ride.total_seats}`}
+              value={seatsValue}
               sub={ride.seats_available === 0 ? "Full" : "Available"}
             />
           </div>
