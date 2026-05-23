@@ -6,6 +6,7 @@ import AboutPage from "@/pages/AboutPage";
 import FaqPage from "@/pages/FaqPage";
 import PrivacyPage from "@/pages/PrivacyPage";
 import TermsPage from "@/pages/TermsPage";
+import DownloadPage from "@/pages/DownloadPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 
 // Top-level router. SiteLayout wraps every page with Navbar + Footer
@@ -25,6 +26,12 @@ export default function App() {
         <Route path="/terms" element={<TermsPage />} />
         <Route path="/r/:rideId" element={<SharePage />} />
         <Route path="/ride/:rideId" element={<SharePage />} />
+        {/* /download is the canonical landing for the in-app share
+            message's "New to UniPool? Download it" line. Platform-
+            aware redirect lives in DownloadPage so a single URL
+            does the right thing on Android (auto-redirect to Play),
+            iOS (coming soon), and desktop (both buttons). */}
+        <Route path="/download" element={<DownloadPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>

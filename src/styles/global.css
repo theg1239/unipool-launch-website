@@ -41,6 +41,11 @@
     "Nunito Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-display:
     "Nunito Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* Mono only used in airline-ticket contexts on the share page —
+     reads as "stamped on a real document" and contrasts the
+     editorial Nunito Sans rather than competing with it. */
+  --font-mono:
+    "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
   --tracking-tighter: -0.04em;
   --tracking-tightest: -0.06em;
@@ -262,5 +267,23 @@
   .prose-legal strong {
     color: var(--color-forest);
     font-weight: 800;
+  }
+}
+
+@layer utilities {
+  /* Solid opacity pulse used by the SharePage ticket skeleton while
+     the ride preview loads. No gradient sweep — the app's loading
+     state language is solid forest-tinted blocks fading at the
+     container level, so this keeps the web parity exact. Picked up
+     via the `animate-[ticket-pulse_1.4s_ease-in-out_infinite]`
+     arbitrary class. */
+  @keyframes ticket-pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.55;
+    }
   }
 }
