@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { SHARE_HOST, APP_STORE_URL, PLAY_STORE_URL } from "@/config";
+import { SHARE_HOST, APP_STORE_URL, PLAY_STORE_URL, WEBAPP_URL } from "@/config";
 
 const YEAR = new Date().getFullYear();
 
@@ -78,6 +78,13 @@ export default function Footer({ external = false }: { external?: boolean }) {
                 icon={<PlayGlyph />}
               />
             </div>
+            {/* No install needed on desktop — open the app in the browser. */}
+            <a
+              href={WEBAPP_URL}
+              className="mt-3 inline-block text-[13px] font-semibold text-cream/60 underline-offset-2 transition hover:text-lime"
+            >
+              Open in your browser
+            </a>
           </div>
         </div>
 

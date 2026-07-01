@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
-import { openInApp } from "@/config";
+import { openInApp, WEBAPP_URL } from "@/config";
 // QR rendered as a remote SVG image. Two reasons over a JS library:
 //   1. Zero runtime dependency — survives lockfile cleanups and
 //      keeps the website's prod bundle smaller.
@@ -140,7 +140,7 @@ export default function SharePage() {
             title="This ride is no longer available"
             body="It might have been cancelled, or the trip already happened."
             ctaLabel="Find another ride"
-            ctaHref={isIOS ? APP_STORE_URL : PLAY_STORE_URL}
+            ctaHref={WEBAPP_URL}
           />
         ) : preview ? (
           <BoardingPass
@@ -203,15 +203,15 @@ function BoardingPass({
 
   const deepLink = `${SHARE_HOST}/ride/${rideId}`;
 
-  // Store is the no-JS href fallback; the mobile onClick tries the app
-  // first and only lands on the store if it isn't installed.
-  const ctaHref = storeUrl;
-  const ctaLabel = isMobile ? "Open in UniPool" : "Get UniPool to join";
+  // Desktop can't run the native app, so its primary action opens the ride
+  // in the web app (same origin, /app/ride/:id). Mobile tries the native
+  // app via the onClick below, with the store as the no-JS href fallback.
+  const webRideLink = `${WEBAPP_URL}/ride/${rideId}`;
+  const ctaHref = isMobile ? storeUrl : webRideLink;
+  const ctaLabel = isMobile ? "Open in UniPool" : "Open on web";
 
-  const altActionHref = isMobile ? storeUrl : `unipool://ride/${rideId}`;
-  const altActionLabel = isMobile
-    ? "Don't have the app yet?"
-    : "Already have UniPool? Open it";
+  const altActionHref = storeUrl;
+  const altActionLabel = isMobile ? "Don't have the app yet?" : "Get the app";
 
   const hostBadgeName = ride.host_first_name || "A UniPool host";
   const hostInitial = (ride.host_first_name?.[0] || "U").toUpperCase();
@@ -299,8 +299,6 @@ function BoardingPass({
               h-16 so the card stays one-screen-tall. */}
           <a
             href={ctaHref}
-            target={isMobile ? undefined : "_blank"}
-            rel={isMobile ? undefined : "noreferrer"}
             onClick={
               isMobile
                 ? (e) => {
@@ -316,8 +314,8 @@ function BoardingPass({
           </a>
           <a
             href={altActionHref}
-            target={isMobile ? "_blank" : undefined}
-            rel={isMobile ? "noreferrer" : undefined}
+            target="_blank"
+            rel="noreferrer"
             className="mt-2 block text-center text-[12px] font-semibold text-forest/55 transition hover:text-forest"
           >
             {altActionLabel}
