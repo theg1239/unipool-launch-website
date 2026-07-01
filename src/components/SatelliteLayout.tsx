@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import type { DomainRole } from "@/utils/domain";
 import { DOWNLOAD_URL } from "@/config";
+import Footer from "./Footer";
 
 // Shared chrome for the satellite domains (unipool.to, .today, .best,
 // etc). Matches the main launch site's navbar + footer so every UniPool
@@ -34,25 +35,7 @@ export default function SatelliteLayout({ domain: _domain }: { domain: DomainRol
         <Outlet />
       </main>
 
-      <footer className="border-t border-forest/10 bg-forest text-cream">
-        <div className="container-x flex flex-col items-center gap-6 py-10 sm:flex-row sm:justify-between">
-          <span className="text-lg font-extrabold tracking-tight text-lime">UniPool</span>
-          <nav className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-cream/70">
-            <a href="https://unipool.in/about" className="hover:text-lime">About</a>
-            <a href="https://unipool.in/faq" className="hover:text-lime">FAQ</a>
-            <a href="https://unipool.in/privacy" className="hover:text-lime">Privacy</a>
-            <a href="https://unipool.in/terms" className="hover:text-lime">Terms</a>
-            <a href="mailto:hello@unipool.acmvit.in" className="hover:text-lime">Contact</a>
-          </nav>
-          <p className="text-xs text-cream/55">
-            Made with love by{" "}
-            <a href="https://acmvit.in" target="_blank" rel="noreferrer" className="font-semibold text-lime hover:underline">
-              ACM-VIT
-            </a>
-            .
-          </p>
-        </div>
-      </footer>
+      <Footer external />
     </div>
   );
 }
