@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import RouteMini from "@/components/RouteMini";
 import { useDocumentTitle } from "@/utils/useDocumentTitle";
-import { DOWNLOAD_URL, rideLink } from "@/config";
+import { appLinkProps, rideLink } from "@/config";
 import {
   type Ride,
   fetchUpcomingRides,
@@ -61,23 +61,12 @@ export default function TodayBoard() {
         <div className="mt-7">
           {loading && rides.length === 0 ? (
             <div className="space-y-2.5">
-              {[0, 1, 2, 3].map((i) => (
-                <div key={i} className="animate-[ticket-pulse_1.4s_ease-in-out_infinite] rounded-[20px] bg-white p-5 shadow-card">
-                  <div className="h-3.5 w-44 rounded-full bg-forest/8" />
-                  <div className="mt-4 h-3 w-28 rounded-full bg-forest/8" />
-                </div>
+              {[0, 1, 2].map((i) => (
+                <RideSkeleton key={i} />
               ))}
             </div>
           ) : rides.length === 0 ? (
-            <div className="rounded-[20px] bg-white px-6 py-12 text-center shadow-card">
-              <p className="text-[17px] font-extrabold text-forest">No rides posted for today</p>
-              <p className="mt-1.5 text-[14px] text-forest/45">
-                Open the app and post yours. Others heading the same way can hop in.
-              </p>
-              <a href={DOWNLOAD_URL} className="mt-5 inline-flex items-center justify-center rounded-2xl bg-forest px-6 py-3 text-[15px] font-extrabold text-lime">
-                Post a ride
-              </a>
-            </div>
+            <EmptyToday />
           ) : (
             <ul className="space-y-2.5">
               {rides.map((ride) => (
@@ -108,7 +97,7 @@ export default function TodayBoard() {
 
         {rides.length > 0 ? (
           <div className="mt-7 flex items-center justify-between">
-            <a href={DOWNLOAD_URL} className="inline-flex items-center justify-center rounded-2xl bg-forest px-6 py-3 text-[15px] font-extrabold text-lime transition active:scale-[0.98]">
+            <a {...appLinkProps("post")} className="inline-flex items-center justify-center rounded-2xl bg-forest px-6 py-3 text-[15px] font-extrabold text-lime transition active:scale-[0.98]">
               Post a ride
             </a>
             {lastRefresh ? (
@@ -120,6 +109,85 @@ export default function TodayBoard() {
         ) : null}
       </div>
     </section>
+  );
+}
+
+// Loading placeholder shaped like the real ride card (route on the left,
+// time/price on the right, host line below) so the list resolves in place
+// instead of a generic grey blob.
+function RideSkeleton() {
+  return (
+    <div className="rounded-[20px] bg-white p-5 shadow-card">
+      <div className="flex items-start justify-between gap-4">
+        <div className="min-w-0 flex-1 space-y-3">
+          <div className="flex items-center gap-3">
+            <span className="skeleton h-3 w-3 shrink-0 rounded-full" />
+            <span className="skeleton h-3.5 w-28 rounded-full" />
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="skeleton h-3 w-3 shrink-0 rounded-full" />
+            <span className="skeleton h-3.5 w-40 rounded-full" />
+          </div>
+        </div>
+        <div className="shrink-0 space-y-2">
+          <span className="skeleton ml-auto block h-3.5 w-16 rounded-full" />
+          <span className="skeleton ml-auto block h-3 w-12 rounded-full" />
+        </div>
+      </div>
+      <div className="skeleton mt-4 h-3 w-44 rounded-full" />
+    </div>
+  );
+}
+
+// Empty board. Friendly, branded, and reassures that the board is live.
+function EmptyToday() {
+  return (
+    <div className="rounded-[24px] bg-white px-6 py-12 text-center shadow-card">
+      <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-lime/25">
+        <CarIcon />
+      </div>
+      <p className="mt-5 text-[18px] font-extrabold tracking-tight text-forest">
+        Nothing leaving today, yet
+      </p>
+      <p className="mx-auto mt-1.5 max-w-[17rem] text-[14px] leading-relaxed text-forest/50">
+        Be the first to post a ride for today. Anyone heading your way can hop in.
+      </p>
+      <a
+        {...appLinkProps("post")}
+        className="mt-6 inline-flex items-center justify-center rounded-2xl bg-forest px-6 py-3 text-[15px] font-extrabold text-lime transition active:scale-[0.98]"
+      >
+        Post a ride
+      </a>
+      <p className="mt-5 flex items-center justify-center gap-1.5 text-[12px] text-forest/35">
+        <span className="relative flex h-1.5 w-1.5">
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-lime-500 opacity-60" />
+          <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-lime-500" />
+        </span>
+        Checking for new rides every minute
+      </p>
+    </div>
+  );
+}
+
+function CarIcon() {
+  return (
+    <svg
+      width="30"
+      height="30"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.7"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="text-forest"
+      aria-hidden
+    >
+      <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2" />
+      <circle cx="7" cy="17" r="2" />
+      <path d="M9 17h6" />
+      <circle cx="17" cy="17" r="2" />
+    </svg>
   );
 }
 

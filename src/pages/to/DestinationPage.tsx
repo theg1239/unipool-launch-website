@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { findDestination } from "@/utils/destinations";
-import { rideLink, storeUrlForPlatform } from "@/config";
+import { rideLink, appLinkProps } from "@/config";
 import RouteMini from "@/components/RouteMini";
 import { useDocumentTitle } from "@/utils/useDocumentTitle";
 import {
@@ -21,8 +21,6 @@ export default function DestinationPage() {
   const dest = slug ? findDestination(slug) : undefined;
   const [rides, setRides] = useState<Ride[]>([]);
   const [loading, setLoading] = useState(true);
-
-  const storeUrl = storeUrlForPlatform();
 
   useDocumentTitle(
     dest ? `Rides to ${dest.name} · UniPool` : "UniPool",
@@ -124,10 +122,10 @@ export default function DestinationPage() {
         )}
 
         <div className="mt-6 grid grid-cols-2 gap-2.5">
-          <a href={storeUrl} target="_blank" rel="noreferrer" className="flex items-center justify-center rounded-2xl bg-forest px-5 py-3.5 text-[15px] font-extrabold text-lime transition active:scale-[0.98]">
+          <a {...appLinkProps("search")} className="flex items-center justify-center rounded-2xl bg-forest px-5 py-3.5 text-[15px] font-extrabold text-lime transition active:scale-[0.98]">
             Find a ride
           </a>
-          <a href={storeUrl} target="_blank" rel="noreferrer" className="flex items-center justify-center rounded-2xl bg-white px-5 py-3.5 text-[15px] font-extrabold text-forest shadow-card transition active:scale-[0.98]">
+          <a {...appLinkProps("post")} className="flex items-center justify-center rounded-2xl bg-white px-5 py-3.5 text-[15px] font-extrabold text-forest shadow-card transition active:scale-[0.98]">
             Post a ride
           </a>
         </div>

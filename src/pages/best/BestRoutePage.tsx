@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { BEST_ROUTES } from "./BestIndex";
-import { storeUrlForPlatform } from "@/config";
+import { appLinkProps } from "@/config";
 import RouteMini from "@/components/RouteMini";
 import { useDocumentTitle } from "@/utils/useDocumentTitle";
 import { type Ride, fetchUpcomingRides, ridesOnRoute, fareRangeLabel } from "@/utils/rides";
@@ -57,7 +57,6 @@ export default function BestRoutePage() {
   const route = BEST_ROUTES.find((r) => r.slug === slug);
   const data = slug ? ROUTE_DATA[slug] : undefined;
   const [routeRides, setRouteRides] = useState<Ride[] | null>(null);
-  const storeUrl = storeUrlForPlatform();
 
   useDocumentTitle(
     route ? `${route.from} to ${route.to} carpool · UniPool` : "UniPool",
@@ -121,10 +120,10 @@ export default function BestRoutePage() {
         </div>
 
         <div className="mt-6 grid grid-cols-2 gap-2.5">
-          <a href={storeUrl} target="_blank" rel="noreferrer" className="flex items-center justify-center rounded-2xl bg-forest px-5 py-3.5 text-[15px] font-extrabold text-lime transition active:scale-[0.98]">
+          <a {...appLinkProps("search")} className="flex items-center justify-center rounded-2xl bg-forest px-5 py-3.5 text-[15px] font-extrabold text-lime transition active:scale-[0.98]">
             Find this ride
           </a>
-          <a href={storeUrl} target="_blank" rel="noreferrer" className="flex items-center justify-center rounded-2xl bg-white px-5 py-3.5 text-[15px] font-extrabold text-forest shadow-card transition active:scale-[0.98]">
+          <a {...appLinkProps("post")} className="flex items-center justify-center rounded-2xl bg-white px-5 py-3.5 text-[15px] font-extrabold text-forest shadow-card transition active:scale-[0.98]">
             Post this ride
           </a>
         </div>

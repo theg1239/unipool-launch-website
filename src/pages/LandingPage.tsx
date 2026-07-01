@@ -52,12 +52,24 @@ function Hero() {
           >
             {primaryLabel}
           </a>
-          <Link
-            to="/about"
-            className="rounded-full border border-forest/20 px-7 py-3 text-sm font-bold text-forest transition hover:border-forest/40"
-          >
-            Learn more
-          </Link>
+          {/* Secondary CTA. Desktop keeps "Learn more" (its primary is
+              already the web app); mobile offers the web app here since
+              its primary is the store download. */}
+          {isDesktop ? (
+            <Link
+              to="/about"
+              className="rounded-full border border-forest/20 px-7 py-3 text-sm font-bold text-forest transition hover:border-forest/40"
+            >
+              Learn more
+            </Link>
+          ) : (
+            <a
+              href={WEBAPP_URL}
+              className="rounded-full border border-forest/20 px-7 py-3 text-sm font-bold text-forest transition hover:border-forest/40"
+            >
+              Open in web
+            </a>
+          )}
         </div>
         <p className="mt-6 text-sm font-semibold text-forest/55 sm:mt-10">
           Made with care by ACM-VIT.
@@ -83,21 +95,21 @@ function Download() {
   return (
     <section
       id="download"
-      className="border-t border-forest/10 bg-forest px-8 py-20 text-cream md:px-14"
+      className="border-t border-forest/10 bg-forest px-6 py-14 text-cream sm:py-20 md:px-14"
     >
       <div className="container-x text-center">
-        <h2 className="text-3xl font-extrabold tracking-tight text-cream sm:text-4xl">
+        <h2 className="text-2xl font-extrabold tracking-tight text-cream sm:text-4xl">
           Download the app
         </h2>
-        <p className="mx-auto mt-3 max-w-md text-base text-cream/70">
+        <p className="mx-auto mt-2.5 max-w-md text-[15px] text-cream/70 sm:mt-3 sm:text-base">
           Available on the App Store and Google Play.
         </p>
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+        <div className="mx-auto mt-7 flex max-w-xs flex-col gap-2.5 sm:max-w-none sm:flex-row sm:justify-center sm:gap-3">
           <a
             href={APP_STORE_URL}
             target="_blank"
             rel="noreferrer"
-            className="rounded-full bg-lime px-7 py-3 text-sm font-bold text-forest transition hover:bg-lime-500"
+            className="w-full rounded-full bg-lime px-7 py-3 text-sm font-bold text-forest transition hover:bg-lime-500 sm:w-auto"
           >
             App Store
           </a>
@@ -105,17 +117,15 @@ function Download() {
             href={PLAY_STORE_URL}
             target="_blank"
             rel="noreferrer"
-            className="rounded-full border border-cream/20 px-7 py-3 text-sm font-bold text-cream transition hover:bg-cream/10"
+            className="w-full rounded-full border border-cream/20 px-7 py-3 text-sm font-bold text-cream transition hover:bg-cream/10 sm:w-auto"
           >
-            Google Play Store
+            Google Play
           </a>
         </div>
         <p className="mt-6 text-sm text-cream/55">
           Prefer the browser?{" "}
           <a
             href={WEBAPP_URL}
-            target="_blank"
-            rel="noreferrer"
             className="font-semibold text-lime underline-offset-2 hover:underline"
           >
             Open the web app

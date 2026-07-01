@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { SHARE_HOST, storeUrlForPlatform } from "@/config";
+import { SHARE_HOST, appLinkProps } from "@/config";
 import { useDocumentTitle } from "@/utils/useDocumentTitle";
 
 type Campaign = {
@@ -25,8 +25,6 @@ export default function CampaignLanding() {
   const { slug } = useParams<{ slug: string }>();
   const campaign = slug ? findCampaign(slug) : undefined;
 
-  const storeUrl = storeUrlForPlatform();
-
   useDocumentTitle(campaign ? `${campaign.title} · UniPool` : "UniPool", campaign?.subtitle);
 
   useEffect(() => {
@@ -48,9 +46,7 @@ export default function CampaignLanding() {
           {campaign.subtitle}
         </p>
         <a
-          href={storeUrl}
-          target="_blank"
-          rel="noreferrer"
+          {...appLinkProps()}
           className="mt-7 flex w-full items-center justify-center rounded-2xl bg-forest px-6 py-3.5 text-[15px] font-extrabold text-lime transition active:scale-[0.98]"
         >
           Get UniPool

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
+import { openInApp } from "@/config";
 // QR rendered as a remote SVG image. Two reasons over a JS library:
 //   1. Zero runtime dependency — survives lockfile cleanups and
 //      keeps the website's prod bundle smaller.
@@ -202,7 +203,9 @@ function BoardingPass({
 
   const deepLink = `${SHARE_HOST}/ride/${rideId}`;
 
-  const ctaHref = isMobile ? `unipool://ride/${rideId}` : storeUrl;
+  // Store is the no-JS href fallback; the mobile onClick tries the app
+  // first and only lands on the store if it isn't installed.
+  const ctaHref = storeUrl;
   const ctaLabel = isMobile ? "Open in UniPool" : "Get UniPool to join";
 
   const altActionHref = isMobile ? storeUrl : `unipool://ride/${rideId}`;
@@ -298,6 +301,14 @@ function BoardingPass({
             href={ctaHref}
             target={isMobile ? undefined : "_blank"}
             rel={isMobile ? undefined : "noreferrer"}
+            onClick={
+              isMobile
+                ? (e) => {
+                    e.preventDefault();
+                    openInApp(`ride/${rideId}`);
+                  }
+                : undefined
+            }
             className="mt-5 flex h-12 w-full items-center justify-center rounded-full bg-forest text-sm font-extrabold tracking-wide text-lime transition hover:bg-forest-700 active:scale-[0.99]"
           >
             {ctaLabel}

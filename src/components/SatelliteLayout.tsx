@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import type { DomainRole } from "@/utils/domain";
-import { DOWNLOAD_URL } from "@/config";
+import { appLinkProps } from "@/config";
 import Footer from "./Footer";
 
 // Shared chrome for the satellite domains (unipool.to, .today, .best,
@@ -23,7 +23,7 @@ export default function SatelliteLayout({ domain: _domain }: { domain: DomainRol
             </span>
           </Link>
           <a
-            href={DOWNLOAD_URL}
+            {...appLinkProps()}
             className="inline-flex items-center justify-center rounded-full bg-forest px-5 py-2.5 text-sm font-bold text-lime transition hover:bg-forest-700"
           >
             Get the app

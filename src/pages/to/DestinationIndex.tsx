@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { DESTINATIONS } from "@/utils/destinations";
-import { DOWNLOAD_URL } from "@/config";
+import { appLinkProps } from "@/config";
 import { useDocumentTitle } from "@/utils/useDocumentTitle";
 
 export default function DestinationIndex() {
@@ -47,7 +47,7 @@ export default function DestinationIndex() {
             Search any route inside the app.
           </p>
           <a
-            href={DOWNLOAD_URL}
+            {...appLinkProps()}
             className="mt-5 inline-flex items-center justify-center rounded-2xl bg-lime px-6 py-3 text-[15px] font-extrabold text-forest transition active:scale-[0.98]"
           >
             Open UniPool

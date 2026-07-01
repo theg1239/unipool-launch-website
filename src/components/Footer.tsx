@@ -24,27 +24,19 @@ export default function Footer({ external = false }: { external?: boolean }) {
         className="pointer-events-none absolute inset-0 h-full w-full select-none object-cover object-bottom opacity-[0.18]"
       />
 
-      <div className="container-x relative py-14">
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_1.2fr]">
+      <div className="container-x relative py-11 sm:py-14">
+        {/* Two-up on mobile so the link columns sit side by side (Legal on
+            the right) instead of stacking into a tall list; opens up to a
+            single row on large screens. */}
+        <div className="grid grid-cols-2 gap-x-8 gap-y-8 lg:grid-cols-[1.6fr_1fr_1fr_1.2fr] lg:gap-10">
           {/* Brand */}
-          <div>
+          <div className="col-span-2 lg:col-span-1">
             <span className="text-xl font-extrabold tracking-tight text-lime">
               UniPool
             </span>
-            <p className="mt-3 max-w-xs text-sm leading-relaxed text-cream/70">
+            <p className="mt-2.5 max-w-xs text-sm leading-relaxed text-cream/70">
               Carpool with your campus. Match a ride, split the fare, and get
               there together.
-            </p>
-            <p className="mt-5 text-xs text-cream/55">
-              Built by{" "}
-              <a
-                href="https://acmvit.in"
-                target="_blank"
-                rel="noreferrer"
-                className="font-semibold text-lime hover:underline"
-              >
-                ACM-VIT
-              </a>
             </p>
           </div>
 
@@ -55,7 +47,7 @@ export default function Footer({ external = false }: { external?: boolean }) {
             <FootLink external={external} to="/faq">FAQ</FootLink>
           </FooterCol>
 
-          {/* Legal */}
+          {/* Legal — sits in the right column on mobile */}
           <FooterCol title="Legal">
             <FootLink external={external} to="/privacy">Privacy</FootLink>
             <FootLink external={external} to="/terms">Terms</FootLink>
@@ -68,23 +60,28 @@ export default function Footer({ external = false }: { external?: boolean }) {
           </FooterCol>
 
           {/* Get the app */}
-          <FooterCol title="Get the app">
-            <StoreButton
-              href={APP_STORE_URL}
-              sub="Download on the"
-              name="App Store"
-              icon={<AppleGlyph />}
-            />
-            <StoreButton
-              href={PLAY_STORE_URL}
-              sub="Get it on"
-              name="Google Play"
-              icon={<PlayGlyph />}
-            />
-          </FooterCol>
+          <div className="col-span-2 lg:col-span-1">
+            <h3 className="text-[11px] font-bold uppercase tracking-[0.14em] text-cream/45">
+              Get the app
+            </h3>
+            <div className="mt-4 flex flex-row flex-wrap gap-2.5 lg:flex-col">
+              <StoreButton
+                href={APP_STORE_URL}
+                sub="Download on the"
+                name="App Store"
+                icon={<AppleGlyph />}
+              />
+              <StoreButton
+                href={PLAY_STORE_URL}
+                sub="Get it on"
+                name="Google Play"
+                icon={<PlayGlyph />}
+              />
+            </div>
+          </div>
         </div>
 
-        <div className="mt-12 flex flex-col items-center gap-2 border-t border-cream/10 pt-6 text-xs text-cream/55 sm:flex-row sm:justify-between">
+        <div className="mt-10 flex flex-col items-center gap-2 border-t border-cream/10 pt-6 text-xs text-cream/55 sm:flex-row sm:justify-between">
           <span>© {YEAR} UniPool. All rights reserved.</span>
           <span>
             Made with love by{" "}

@@ -60,3 +60,59 @@ export function detectPlatform(): Platform {
 export function storeUrlForPlatform(): string {
   return detectPlatform() === "ios" ? APP_STORE_URL : PLAY_STORE_URL;
 }
+
+// Custom scheme the native app registers (app.json `scheme`). Ride links
+// (/r/:id) are universal links the OS routes to the app on their own; this
+// scheme is for the generic "open the app" CTAs, which would otherwise
+// dead-end at the store even when the app is installed.
+export const APP_SCHEME = import.meta.env.VITE_APP_SCHEME || "unipool://";
+
+// Open the installed native app; fall back to the store if it isn't there.
+// Desktop can't run the native app, so it opens the web app instead. If
+// the app opens, the tab is backgrounded (visibility/pagehide) and we
+// cancel the store fallback so the user isn't bounced afterwards.
+export function openInApp(appPath = ""): void {
+  if (typeof window === "undefined") return;
+  if (detectPlatform() === "desktop") {
+    window.location.href = WEBAPP_URL;
+    return;
+  }
+  const store = storeUrlForPlatform();
+  const deepLink = APP_SCHEME + appPath.replace(/^\/+/, "");
+  let settled = false;
+  const finish = () => {
+    settled = true;
+    clearTimeout(timer);
+    document.removeEventListener("visibilitychange", onVis);
+    window.removeEventListener("pagehide", finish);
+  };
+  const onVis = () => {
+    if (document.visibilityState === "hidden") finish();
+  };
+  document.addEventListener("visibilitychange", onVis);
+  window.addEventListener("pagehide", finish);
+  const timer = setTimeout(() => {
+    document.removeEventListener("visibilitychange", onVis);
+    window.removeEventListener("pagehide", finish);
+    if (!settled) window.location.href = store;
+  }, 1400);
+  window.location.href = deepLink;
+}
+
+// Props for an <a> that opens the app (JS) but keeps a sensible no-JS
+// fallback in `href` (store on mobile, web app on desktop). The param is
+// typed loosely so it accepts a React synthetic event without importing
+// React into this module.
+export function appLinkProps(appPath = ""): {
+  href: string;
+  onClick: (e: { preventDefault: () => void }) => void;
+} {
+  const href = detectPlatform() === "desktop" ? WEBAPP_URL : storeUrlForPlatform();
+  return {
+    href,
+    onClick: (e) => {
+      e.preventDefault();
+      openInApp(appPath);
+    },
+  };
+}
