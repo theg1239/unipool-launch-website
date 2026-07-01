@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { APP_STORE_URL, PLAY_STORE_URL, detectPlatform, storeUrlForPlatform, WEBAPP_URL } from "@/config";
 
 // Landing page modelled on the original launch site: split-screen
 // hero (text + CTA on the left, illustration on the right), forest
@@ -18,6 +19,18 @@ export default function LandingPage() {
 }
 
 function Hero() {
+  // Device-aware primary CTA. Mobile visitors can install the native
+  // app, so "Download" jumps straight to the right store. Desktop
+  // visitors can't install a phone app, so the primary action opens
+  // the web app they can actually use right now; "Learn more" stays as
+  // the secondary route to the about page.
+  const isDesktop = detectPlatform() === "desktop";
+  const primaryHref = isDesktop ? WEBAPP_URL : storeUrlForPlatform();
+  const primaryLabel = isDesktop ? "Open the web app" : "Download";
+  // The web app is same-origin (/app), so open it in the same tab; store
+  // links go to an external site, so those open in a new tab.
+  const primaryExternal = !isDesktop;
+
   return (
     <section className="flex h-[calc(100svh-4rem)] min-h-[600px] flex-col md:h-[calc(100dvh-4rem)] md:min-h-[640px] md:flex-row">
       {/* Left half — text + CTA on cream. flex-1 on mobile so it
@@ -32,10 +45,12 @@ function Hero() {
         </p>
         <div className="mt-6 flex flex-wrap items-center gap-3 sm:mt-8">
           <a
-            href="#download"
+            href={primaryHref}
+            target={primaryExternal ? "_blank" : undefined}
+            rel={primaryExternal ? "noreferrer" : undefined}
             className="rounded-full bg-forest px-7 py-3 text-sm font-bold text-lime transition hover:bg-forest-700"
           >
-            Download
+            {primaryLabel}
           </a>
           <Link
             to="/about"
@@ -75,21 +90,38 @@ function Download() {
           Download the app
         </h2>
         <p className="mx-auto mt-3 max-w-md text-base text-cream/70">
-          Available on Google Play. Coming soon to iOS.
+          Available on the App Store and Google Play.
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
           <a
-            href="https://play.google.com/store/apps/details?id=com.carpoolitapp&hl=en_IN"
+            href={APP_STORE_URL}
             target="_blank"
             rel="noreferrer"
             className="rounded-full bg-lime px-7 py-3 text-sm font-bold text-forest transition hover:bg-lime-500"
           >
+            App Store
+          </a>
+          <a
+            href={PLAY_STORE_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="rounded-full border border-cream/20 px-7 py-3 text-sm font-bold text-cream transition hover:bg-cream/10"
+          >
             Google Play Store
           </a>
-          <span className="rounded-full border border-cream/20 px-7 py-3 text-sm font-bold text-cream/60">
-            iOS coming soon
-          </span>
         </div>
+        <p className="mt-6 text-sm text-cream/55">
+          Prefer the browser?{" "}
+          <a
+            href={WEBAPP_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="font-semibold text-lime underline-offset-2 hover:underline"
+          >
+            Open the web app
+          </a>
+          .
+        </p>
       </div>
     </section>
   );

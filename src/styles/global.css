@@ -35,6 +35,9 @@
   --color-cream-warm: #fbf7e9;
 
   --color-coral: #ff6b5b;
+  /* Accent orange — matches AppColors.accentOrange in the mobile app,
+     used for "Just listed" freshness flags on ride cards. */
+  --color-accentorange: #f09e5c;
   --color-ink: #0a0a0a;
 
   --font-sans:
@@ -62,6 +65,11 @@
   html {
     -webkit-tap-highlight-color: transparent;
     scroll-behavior: smooth;
+    /* The launch site is intentionally light (cream/lime/forest), like
+       the rest of the marketing surface. Declaring the scheme tells
+       browsers — including Chrome's experimental "auto dark mode" — not
+       to force-invert it into a muddy auto-dark rendering. */
+    color-scheme: light;
     /* Match the body color so any overscroll bounce on iOS / mac
        trackpads shows the brand cream, not the browser's default
        white. */

@@ -22,7 +22,7 @@ const FAQ: FaqGroup[] = [
       },
       {
         q: "Which platforms is the app on?",
-        a: "Available on Google Play. The iOS build is in review and arrives soon.",
+        a: "Available now on both the App Store (iOS) and Google Play (Android).",
       },
       {
         q: "Does UniPool charge a fee?",

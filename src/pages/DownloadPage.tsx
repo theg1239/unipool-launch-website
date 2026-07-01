@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 // the literal here means a store-link change is a one-file grep.
 const PLAY_STORE_URL =
   "https://play.google.com/store/apps/details?id=com.carpoolitapp&hl=en_IN";
+const APP_STORE_URL = "https://apps.apple.com/app/id6756426249";
 
 /**
  * /download — the platform-aware landing page that every in-app
@@ -19,10 +20,9 @@ const PLAY_STORE_URL =
  *            graceful path for users on Android browsers that
  *            block window.location reassignment.
  *
- *   iOS:     shows a "Coming soon" card. App Store submission is
- *            in flight (TestFlight only at time of writing); the
- *            moment that ships the iOS branch flips to an App
- *            Store auto-redirect symmetric to Android.
+ *   iOS:     auto-redirects to the App Store, symmetric to Android.
+ *            UniPool shipped to the App Store (v2.0.10), so the old
+ *            "coming soon" card is gone.
  *
  *   Desktop: shows both store buttons side-by-side. The visitor
  *            is probably someone who got a share link in WhatsApp
@@ -43,11 +43,13 @@ export default function DownloadPage() {
   }, []);
 
   useEffect(() => {
+    // Replace, not assign — the user shouldn't be able to back-
+    // arrow out of the store back onto this redirect page and
+    // bounce again.
     if (platform === "android") {
-      // Replace, not assign — the user shouldn't be able to back-
-      // arrow out of the Play Store back onto this redirect page
-      // and bounce again.
       window.location.replace(PLAY_STORE_URL);
+    } else if (platform === "ios") {
+      window.location.replace(APP_STORE_URL);
     }
   }, [platform]);
 
@@ -61,22 +63,27 @@ export default function DownloadPage() {
           {platform === "android"
             ? "Opening Google Play. If nothing happens in a few seconds, tap below."
             : platform === "ios"
-            ? "iOS is coming soon. For Android, the Play Store link is below."
-            : "Available on Google Play. Coming soon to iOS."}
+            ? "Opening the App Store. If nothing happens in a few seconds, tap below."
+            : "Available on the App Store and Google Play."}
         </p>
 
         <div className="mt-10 flex flex-col items-stretch gap-3">
           <a
-            href={PLAY_STORE_URL}
+            href={APP_STORE_URL}
             target="_blank"
             rel="noreferrer"
             className="rounded-full bg-lime px-7 py-3 text-sm font-bold text-forest transition hover:bg-lime-500"
           >
+            Download on the App Store
+          </a>
+          <a
+            href={PLAY_STORE_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="rounded-full border border-cream/20 px-7 py-3 text-sm font-bold text-cream transition hover:bg-cream/10"
+          >
             Get it on Google Play
           </a>
-          <span className="rounded-full border border-cream/20 px-7 py-3 text-sm font-bold text-cream/60">
-            iOS coming soon
-          </span>
         </div>
 
         <p className="mt-12 text-xs text-cream/40">

@@ -39,6 +39,12 @@ const API_BASE = "https://unidev.acmvit.in";
  */
 const SHARE_HOST = "https://unipool.acmvit.in";
 
+// Store URLs. iOS shipped to the App Store (v2.0.10), so iOS visitors
+// now get the App Store link instead of being dumped on Google Play.
+const APP_STORE_URL = "https://apps.apple.com/app/id6756426249";
+const PLAY_STORE_URL =
+  "https://play.google.com/store/apps/details?id=com.carpoolitapp&hl=en_IN";
+
 type RidePreview = {
   id: string;
   start_location: string;
@@ -79,6 +85,7 @@ type RidePreview = {
 export default function SharePage() {
   const { rideId } = useParams<{ rideId: string }>();
   const [isMobile] = useState(detectMobile);
+  const [isIOS] = useState(detectIOS);
   const [revealed, setRevealed] = useState(!isMobile);
 
   const [preview, setPreview] = useState<RidePreview | null>(null);
@@ -132,13 +139,14 @@ export default function SharePage() {
             title="This ride is no longer available"
             body="It might have been cancelled, or the trip already happened."
             ctaLabel="Find another ride"
-            ctaHref="https://play.google.com/store/apps/details?id=com.carpoolitapp&hl=en_IN"
+            ctaHref={isIOS ? APP_STORE_URL : PLAY_STORE_URL}
           />
         ) : preview ? (
           <BoardingPass
             ride={preview}
             rideId={rideId ?? preview.id}
             isMobile={isMobile}
+            isIOS={isIOS}
           />
         ) : previewError === "network" ? (
           <ErrorCard
@@ -161,11 +169,15 @@ function BoardingPass({
   ride,
   rideId,
   isMobile,
+  isIOS,
 }: {
   ride: RidePreview;
   rideId: string;
   isMobile: boolean;
+  isIOS: boolean;
 }) {
+  // Store fallback — App Store on iOS, Play Store everywhere else.
+  const storeUrl = isIOS ? APP_STORE_URL : PLAY_STORE_URL;
   // `formatShareDate` left out here — the friendly weekday label is
   // not used in the compressed layout (the mono date stamp does the
   // job). Restore if a "Sat 23 May" line is added back.
@@ -190,14 +202,10 @@ function BoardingPass({
 
   const deepLink = `${SHARE_HOST}/ride/${rideId}`;
 
-  const ctaHref = isMobile
-    ? `unipool://ride/${rideId}`
-    : "https://play.google.com/store/apps/details?id=com.carpoolitapp&hl=en_IN";
+  const ctaHref = isMobile ? `unipool://ride/${rideId}` : storeUrl;
   const ctaLabel = isMobile ? "Open in UniPool" : "Get UniPool to join";
 
-  const altActionHref = isMobile
-    ? "https://play.google.com/store/apps/details?id=com.carpoolitapp&hl=en_IN"
-    : `unipool://ride/${rideId}`;
+  const altActionHref = isMobile ? storeUrl : `unipool://ride/${rideId}`;
   const altActionLabel = isMobile
     ? "Don't have the app yet?"
     : "Already have UniPool? Open it";
@@ -575,4 +583,16 @@ function detectMobile(): boolean {
   const isTouchMac =
     /Mac/.test(ua) && typeof navigator.maxTouchPoints === "number" && navigator.maxTouchPoints > 1;
   return isTouchMac;
+}
+
+// iOS / iPadOS detection — used to send store fallbacks to the App
+// Store rather than Google Play. iPadOS 13+ reports a Mac UA, so the
+// touch-Mac heuristic is folded in here too.
+function detectIOS(): boolean {
+  if (typeof navigator === "undefined") return false;
+  const ua = navigator.userAgent || "";
+  if (/iPhone|iPad|iPod/i.test(ua)) return true;
+  return (
+    /Mac/.test(ua) && typeof navigator.maxTouchPoints === "number" && navigator.maxTouchPoints > 1
+  );
 }

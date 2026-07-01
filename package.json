@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "stage:app": "node scripts/stage-expo-app.mjs",
     "preview": "vite preview --port 4173",
     "typecheck": "tsc -b --noEmit"
   },
